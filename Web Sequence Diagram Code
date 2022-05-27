@@ -1,0 +1,17 @@
+title Sequence diagram of the application
+
+Client->Request Controller: Request
+Request Controller-->Client: Response 203
+Request Controller->DAO: Add the data to message TABLE
+DAO-->Client: Response 201
+
+note right of Timer: Polls data after very fixed interval of time
+Timer-->DAO: Data polling request for message TABLE
+DAO-->Timer: Polled Data from message TABLE
+Timer->Scheduler: IDs of the messages with dateTime <= current dateTime
+Scheduler->GUPSHUP API: WhatsApp Message POST request
+
+GUPSHUP API->Particular WhatsApp User: Message
+GUPSHUP API-->Scheduler: Response
+Scheduler->DAO: Delete the message by ID from message TABLE
+Scheduler->DAO: Add the response to response TABLE
